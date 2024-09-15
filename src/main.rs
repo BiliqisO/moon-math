@@ -93,3 +93,32 @@ fn long_division_algorithm(dividend:i64, divisor:i64)->(i64, i64){
 
 
 }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn negative_zero_mod() {
+       let (answer, remainder)  =long_division_algorithm(-200, 4);
+        assert_eq!(answer, -50);
+        assert_eq!(remainder, 0);
+    }
+    #[test]
+    fn positive_zero_mod() {
+       let (answer, remainder)  =long_division_algorithm(200, 4);
+        assert_eq!(answer,50);
+        assert_eq!(remainder,0);
+    }
+    #[test]
+    fn positive_nonzero_mod() {
+       let (answer, remainder)  =long_division_algorithm(200, 3);
+        assert_eq!(answer,6);
+        assert_eq!(remainder,2);
+    }
+    #[test]
+    fn nnegative_nonzero_mod() {
+       let (answer, remainder)  =long_division_algorithm(-200, 3);
+        assert_eq!(answer,-6);
+        assert_eq!(remainder,2);
+    }
+}
