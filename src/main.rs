@@ -1,6 +1,9 @@
+
+use std::error;
+
 fn main() {
     println!("Hello, world!");
-    let (answer, remainder)  =long_division_algorithm(-200, 4);
+    let (answer, remainder)  =long_division_algorithm(-1000, 3);
     println!("the div  is {}, the remainder is {}", answer, remainder);
 }
 fn get_first_n_digits(num: i64, n: usize) -> i64 {
@@ -10,22 +13,26 @@ fn get_first_n_digits(num: i64, n: usize) -> i64 {
     first_n_digits.parse::<i64>().unwrap()
 }
 fn append_number(base: i64, to_append: i64) -> i64 {
-    if to_append == 0{
-        return 0;
+    let some_value: Option<i64> = Some(to_append);
+
+    match some_value {
+        Some(value) => {
+            let base_str = base.to_string();
+            let to_append_str = value.to_string();
+            let result_str = format!("{}{}", base_str, to_append_str);
+            result_str.parse::<i64>().unwrap()
+        },
+        None => base, 
     }
-    let base_str = base.to_string();
-    let to_append_str = to_append.to_string();
-    let result_str = format!("{}{}", base_str, to_append_str);
-    result_str.parse::<i64>().unwrap()
 }
-fn get_digit_at_position(num: i64, position: usize) -> i64 {
+fn get_digit_at_position(num: i64, position: usize) -> Option<i64> {
     let num_str = num.abs().to_string();
     if position > 0 && position <= num_str.len() {
         let digit_char = num_str.chars().nth(position - 1).unwrap();
-    Some(digit_char.to_digit(10).unwrap() as i64).unwrap()
+    Some(digit_char.to_digit(10).unwrap() as i64)
    
     } else {
-        0
+        None
     }
 }
 fn number_length(num: i64) -> usize {
@@ -39,7 +46,6 @@ fn long_division_algorithm(dividend:i64, divisor:i64)->(i64, i64){
     let mut  len =0;
     let mut first_iteration = true;
     let mut answer = 0;
-    let mut final_remainder = 0;
     let mut digit = 0;
     let dividend = dividend.abs();
     let dividend_len: usize =    number_length(dividend); 
@@ -52,7 +58,7 @@ fn long_division_algorithm(dividend:i64, divisor:i64)->(i64, i64){
     if first_iteration {
             loop {
                 len += 1;
-
+                
                 if dividend >= divisor {
                     digit = get_first_n_digits(dividend, len);
                     break;
@@ -61,38 +67,29 @@ fn long_division_algorithm(dividend:i64, divisor:i64)->(i64, i64){
             first_iteration = false;
         }
     len += 1; 
-    println!("dividend length is: {}", len);
+    
     let answer_to_append = digit / divisor; 
-    println!(" digit2  is: {}", digit);
     let mut remainder = digit % divisor;
     answer = append_number(answer, answer_to_append);
-    let dividend_to_append = get_digit_at_position( dividend,len);
-    len -=1;
 
-    if digit > divisor {
-    let mut new_dividend  = append_number(remainder, dividend_to_append);  
-    final_remainder = remainder; 
+    if let Some(dividend_to_append) = get_digit_at_position( dividend,len) {
+    len -=1;
+    let  new_dividend  = append_number(remainder, dividend_to_append);  
     digit = new_dividend;
-    new_dividend = 0;
-    println!("answer  is: {}", answer);
-    remainder = 0;
 }else {
     remainder = digit % divisor;
+    if neg_dividend{ break(-1 * answer, remainder);} else{ break (answer, remainder);};
 }
-    if digit < divisor {  
-    if neg_dividend{ break(-1 * answer, final_remainder);} else{ break (answer, final_remainder);};
-    }
     }
 }else{
    answer =  dividend/divisor;
-    println!("answer  is: {}", answer);
-      if neg_dividend{ (-1 * answer, 0)} else{  (answer, 0)} 
+    if neg_dividend{ (-1 * answer, 0)} else{  (answer, 0)} 
+}
 }
 
 
 
 
-}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -112,13 +109,19 @@ mod tests {
     #[test]
     fn positive_nonzero_mod() {
        let (answer, remainder)  =long_division_algorithm(200, 3);
-        assert_eq!(answer,6);
+        assert_eq!(answer,66);
         assert_eq!(remainder,2);
     }
     #[test]
-    fn nnegative_nonzero_mod() {
+    fn negative_nonzero_mod() {
        let (answer, remainder)  =long_division_algorithm(-200, 3);
-        assert_eq!(answer,-6);
+        assert_eq!(answer,-66);
         assert_eq!(remainder,2);
+    }
+    #[test]
+    fn recurring_mod() {
+       let (answer, remainder)  =long_division_algorithm(100, 3);
+        assert_eq!(answer,33);
+        assert_eq!(remainder, 1);
     }
 }
