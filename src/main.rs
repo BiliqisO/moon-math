@@ -1,9 +1,6 @@
-
-use std::error;
-
 fn main() {
     println!("Hello, world!");
-    let (answer, remainder)  =long_division_algorithm(-1000, 3);
+    let (answer, remainder)  =long_division_algorithm(0, 7);
     println!("the div  is {}, the remainder is {}", answer, remainder);
 }
 fn get_first_n_digits(num: i64, n: usize) -> i64 {
@@ -39,19 +36,25 @@ fn number_length(num: i64) -> usize {
     num.abs().to_string().len()
 }
 fn long_division_algorithm(dividend:i64, divisor:i64)->(i64, i64){
-    let mut neg_dividend = false;
-    if dividend < 1{
-    neg_dividend = true;
+    if divisor == 0 && dividend != 0 {
+     panic!("attempt to divide by zero")
     }
-    let mut  len =0;
-    let mut first_iteration = true;
+    let mut negation = false;
+  
+    if dividend < 1 || divisor < 1{
+    negation = true;
+    }
+    let mut  len = 0;
+    let mut first_iteration = true; 
     let mut answer = 0;
     let mut digit = 0;
     let dividend = dividend.abs();
+    let divisor = divisor.abs();
     let dividend_len: usize =    number_length(dividend); 
     let divisor_len: usize =    number_length(divisor); 
+    println!("divif {}", dividend);
 
-    if dividend % divisor != 0 && dividend_len > divisor_len  {
+    if dividend % divisor != 0 && dividend_len > divisor_len && dividend !=0 {
         
     loop{
     len +=  1;
@@ -78,12 +81,15 @@ fn long_division_algorithm(dividend:i64, divisor:i64)->(i64, i64){
     digit = new_dividend;
 }else {
     remainder = digit % divisor;
-    if neg_dividend{ break(-1 * answer, remainder);} else{ break (answer, remainder);};
+    if negation{ break(-1 * answer, remainder);} else{ break (answer, remainder);};
 }
     }
-}else{
+}else if dividend== 0 && divisor == 0{
+    (0, 0)
+}
+else{
    answer =  dividend/divisor;
-    if neg_dividend{ (-1 * answer, 0)} else{  (answer, 0)} 
+    if negation{ (-1 * answer, 0)} else{  (answer, 0)} 
 }
 }
 
@@ -123,5 +129,34 @@ mod tests {
        let (answer, remainder)  =long_division_algorithm(100, 3);
         assert_eq!(answer,33);
         assert_eq!(remainder, 1);
+    }
+    #[test]
+    fn moon_math1() {
+       let (answer, remainder)  =long_division_algorithm(27, 5);
+        assert_eq!(answer,5);
+        assert_eq!(remainder, 2);
+    }
+    #[test]
+    fn moon_math2() {
+       let (answer, remainder)  =long_division_algorithm(27, -5);
+        assert_eq!(answer,-5);
+        assert_eq!(remainder, 2);
+    }
+    #[test]
+    #[should_panic(expected = "attempt to divide by zero")]
+    fn moon_math3() {
+     long_division_algorithm(127, 0);
+    }
+    #[test]
+    fn moon_math4() {
+       let (answer, remainder)  =long_division_algorithm(-1687, 11);
+        assert_eq!(answer,-153);
+        assert_eq!(remainder, 4);
+    }
+    #[test]
+    fn moon_math5() {
+       let (answer, remainder)  =long_division_algorithm(0, 7);
+        assert_eq!(answer,0);
+        assert_eq!(remainder, 0);
     }
 }
