@@ -1,42 +1,43 @@
 fn main() {
     println!("Hello, world!"); 
-    let (gcd, s, t) =extended_euclidean_algorithm(100,25);
+    let ans =remainder_class_algorithm(2,6, String::from("*") ,5);
 
-      println!("gcd {}, s {}, t {} ", gcd, s, t);
+      println!("gcd {:?}", ans);
       
 }
-fn extended_euclidean_algorithm(a:i64,b:i64)->(i64, i64, i64){
-    if a <= 0 || b <= 0{
-        panic!("natural numbers only")
+enum Action {
+  Addition,
+  Multiplication,
+  None
+}
+fn remainder_class_algorithm(a:i64,b:i64, operator:String, mod_num:i64 ) -> i64  {
+let mut final_ans = 0;
+let mut  inter_action:Action = Action::None;
+
+  match operator.as_str() {
+            "+" => {let operation =  Action::Addition;
+            inter_action = operation},
+            "*" => {let operation= Action::Multiplication;
+            inter_action = operation},
+            _ => {
+                panic!("Invalid operator. Please enter + or *.");
+            }
+          }
+match inter_action {
+    Action::Addition=>{let ans = a + b; 
+    final_ans = ans}
+    Action::Multiplication => { let ans = a* b;
+    final_ans = ans},
+    Action::None =>{
+      println!("Invalid operator. Please enter + or *.");
     }
-    let mut q =0;
-    let mut r1 = a;
-    let mut r2=b;
-    let mut s = 1;
-    let mut t = 0;
-    let mut s1 = 0;
-    let mut t1 = 1;
 
-    loop{
-        q = r1/r2;
-        let new_r = r2;
-        let new_s = s1;
-        let new_t = t1;
+}
+final_ans = final_ans % mod_num;
+println!("{}", final_ans);
+final_ans
 
-        r2 = r1 % r2;
 
-        s1 = s - q * s1;
-
-        s = new_s;
-        t1 = t - q * t1;
-        t = new_t;
-        r1 =  new_r;
-        if r2 == 0{
-        break  (s*a + t*b, s, t);
-        }
-   
-    }
-    
 
 
 }
@@ -48,48 +49,20 @@ mod tests {
     use super::*;
 
     #[test]
-    fn moon_math1() {
-        let (gcd, s, t)=extended_euclidean_algorithm(27, 5);
-        assert_eq!(gcd,1);
-        assert_eq!(s, -2);
-        assert_eq!(t, 11);
+    fn test_multiplication() {
+        let modular_arithmetic=remainder_class_algorithm(1, 5, String::from("*"), 5);
+        assert_eq!(modular_arithmetic,0);
+  
     }
     #[test]
-    fn moon_math2() {
-      let (gcd, s, t)=extended_euclidean_algorithm(45, 10);
-        assert_eq!(gcd,5);
-        assert_eq!(s, 1);
-        assert_eq!(t, -4);
+    fn test_addition() {
+        let modular_arithmetic=remainder_class_algorithm(1, 5, String::from("+"), 5);
+        assert_eq!(modular_arithmetic, 1);
+  
     }
     #[test]
-    fn moon_math3() {
-      let (gcd, s, t) =extended_euclidean_algorithm(13, 11);
-        assert_eq!(gcd,1);
-        assert_eq!(s, -5);
-        assert_eq!(t, 6);
+    #[should_panic(expected = "Invalid operator. Please enter + or *.")]
+    fn test_invalid_operator() {
+    remainder_class_algorithm(1, 5, String::from(""), 5);
     }
-    #[test]
-    fn moon_math4() {
-      let (gcd, s, t)=extended_euclidean_algorithm(13, 12);
-        assert_eq!(gcd,1);
-        assert_eq!(s, 1);
-        assert_eq!(t, -1);
-    }
-      #[test]
-    #[should_panic(expected = "natural numbers only")]
-    fn moon_math5() {
-    extended_euclidean_algorithm(0, 12);
-    }
-      #[test]
-    #[should_panic(expected = "natural numbers only")]
-    fn moon_math6() {
-    extended_euclidean_algorithm(12, 0);
-    }
-
-       #[test]
-    #[should_panic(expected = "natural numbers only")]
-    fn moon_math7() {
-    extended_euclidean_algorithm(0, 0);
-    }
-   
 }

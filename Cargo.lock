@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "extended-euclidean-algorithm"
+name = "remainder-class-algorithm"
 version = "0.1.0"
