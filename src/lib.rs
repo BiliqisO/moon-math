@@ -5,7 +5,7 @@
 /// ```
 /// let a = 27;
 /// let b = 5;
-/// let  (gcd, s, t) = my_crate::extended_euclidean_algorithm(a, b);
+/// let  (gcd, s, t) = mathematics::extended_euclidean_algorithm(a, b);
 ///
 ///  assert_eq!(gcd,5);
 ///  assert_eq!(s, 1);
