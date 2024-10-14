@@ -3,5 +3,14 @@
 version = 3
 
 [[package]]
-name = "remainder-class-algorithm"
+name = "Pedersen_hash_function"
 version = "0.1.0"
+dependencies = [
+ "extended-euclidean-algorithm",
+]
+
+[[package]]
+name = "extended-euclidean-algorithm"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4e940fe83e21d2e3b12b98d350d1fe458798d63f3b70bb640f2a391cc2a30070"

@@ -1,70 +1,81 @@
+use mathematics::extended_euclidean_algorithm;
 fn main() {
-    println!("Hello, world!"); 
-    let ans =persedens_hash_function(5);
-
-      println!("ans {:?}", ans);
-      
+    let ans =natural_numbers_generators(13);
+    pedersen_hash_function(1 ,2, 0, 5);
+    println!("ans {:?}", ans);
 }
-fn persedens_hash_function( mod_num:u32 ) -> Option<Vec<u32>>  {
-let mut generators :Vec<u32>= vec![];
-let mut generator: u32 = 1;
-let mut exponent = 0;
-
-while  generator < mod_num {
-  generator += 1;
-  while  exponent < mod_num{
-    exponent+=1;
-   println!("mod_num {:?}", mod_num);
-   println!("exponent {:?}", exponent);
-  println!("generator {:?}", generator);
-  let result = u32::pow(generator, exponent) % mod_num;
-  // if  {
-  //   return None;
-  // }
-  if result  == 1  {     
-    generators.push(generator);
-   println!("generators {:?}", generators);
-} else if result  == 1 && exponent < mod_num{
-  return None;
-};
+fn create_vec_to_n(n: u64) -> Vec<u64> {
+    (1..=n).collect()
+}
+fn pedersen_hash_function(x:u64, y:u64, z: u64, mod_num:u64) -> u64{
+  let generators = natural_numbers_generators(mod_num);
+  let mut h = 1;
+  let mut input: Vec<u64> = Vec::new();
+  input.push(x);
+  input.push(y);
+  if z != 0{
+  input.push(z);
   }
+  loop{
+  for (index, item) in input.clone().into_iter().enumerate(){ 
+    let generator = generators.get(index).unwrap_or(&0);
+        let hash = generator.pow(item as u32) ;
+        h *= hash ;            
+  }
+  if generators.len() >= input.len()  {
+  break;
+  }
+  }
+  let pedersen_hash =  h % mod_num ;
+  pedersen_hash
+}
 
+fn natural_numbers_generators( mod_num:u64 ) -> Vec<u64> {
+let mod_num_vec = create_vec_to_n(mod_num-1);
+let mut generators:Vec<u64> = Vec::new();
+let mut elements :Vec<u64>= vec![];
+let mut new_vectors: Vec<Vec<u64>> =  Vec::new(); 
+let mut generator: u64 = 1;
+
+while mod_num > generator{
+generator+=1;
+for item in &mod_num_vec{
+if extended_euclidean_algorithm(generator.try_into().unwrap(),mod_num.try_into().unwrap() ).0 ==1{
+ let result =   generator.pow((*item).try_into().unwrap())% mod_num;
+  elements.push(result);
+};
+}
+  new_vectors.push(elements.clone());
+  let mut elements_sorted= elements.clone();
+  let mut mod_num_vec_sorted = mod_num_vec.clone();
+    elements_sorted.sort();
+    mod_num_vec_sorted.sort();
+  if mod_num_vec_sorted == elements_sorted{
+  generators.push(generator );
+
+  }
+elements = [].to_vec();
+}
+generator = 1;
+generators
  
-
-
-   
-}
-   return Some(generators);
 }
 
 
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-
-
-
-
-
-
-
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-
-//     #[test]
-//     fn test_multiplication() {
-//         let modular_arithmetic=remainder_class_algorithm(1, 5, String::from("*"), 5);
-//         assert_eq!(modular_arithmetic,0);
+    #[test]
+    fn test1() {
+        let peserden_hash=pedersen_hash_function(1 ,2, 0, 5);
+        assert_eq!(peserden_hash,3);
   
-//     }
-//     #[test]
-//     fn test_addition() {
-//         let modular_arithmetic=remainder_class_algorithm(1, 5, String::from("+"), 5);
-//         assert_eq!(modular_arithmetic, 1);
+    }
+    #[test]
+    fn test2() {
+        let peserden_hash=pedersen_hash_function(3 ,7, 11, 13);
+        assert_eq!(peserden_hash,8);
   
-//     }
-//     #[test]
-//     #[should_panic(expected = "Invalid operator. Please enter + or *.")]
-//     fn test_invalid_operator() {
-//     remainder_class_algorithm(1, 5, String::from(""), 5);
-//     }
-// }
+    }
+}
