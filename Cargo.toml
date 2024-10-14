@@ -2,6 +2,15 @@
 name = "Pedersen_hash_function"
 version = "0.1.0"
 edition = "2021"
+description = "This library computes the pedersen hash of given inputs and modular arithmetic."
+license = "MIT"
+repository = "https://github.com/BiliqisO/moon-math/tree/pedersens-hash-function"
+keywords = ["rust", "pedersen-hash-function", "zero-knowledge", "zkp", "moon-mathematics"] 
+
+[lib]
+name = "pedersen_hash_function"
+path = "src/lib.rs" 
+
 
 [dependencies]
 extended-euclidean-algorithm = "0.1.1"
