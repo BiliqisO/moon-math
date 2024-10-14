@@ -5,7 +5,7 @@ edition = "2021"
 description = "This library computes the greatest common divisor of 2 natural numbers and 2 additional numbers such that gcd(a,b)=s·a+t·b holds."
 license = "MIT"
 repository = "https://github.com/BiliqisO/moon-math/tree/extended-euclidean-algorithm"
-keywords = ["rust", "gcd", "greatest common divisor", "extended euclidean algorithm", "moon mathematics", "mathematics"] 
+keywords = ["rust", "gcd", "greatest common divisor", "extended euclidean algorithm", "moon mathematics"] 
 
 [lib]
 name = "mathematics"
